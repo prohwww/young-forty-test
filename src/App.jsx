@@ -45,7 +45,7 @@ function ProgressDots({ current, total }) {
   );
 }
 
-function Intro({ onStart, isAdsInitialized }) {
+function Intro({ onStart }) {
   return (
     <div className="card intro-card">
       <img src="/logo.png" alt="영포티 테스트" className="intro-logo" />
@@ -65,12 +65,11 @@ function Intro({ onStart, isAdsInitialized }) {
       <button className="btn-primary" onClick={onStart}>
         내 유형 알아보기 →
       </button>
-      <ListBannerAd adGroupId="ait.v2.live.7e273542668b401f" isAdsInitialized={isAdsInitialized} />
     </div>
   );
 }
 
-function QuizCard({ question, questionIndex, total, onAnswer, isAdsInitialized }) {
+function QuizCard({ question, questionIndex, total, onAnswer }) {
   const [selectedOption, setSelectedOption] = useState(null);
 
   function handleOptionClick(option, idx, event) {
@@ -96,7 +95,6 @@ function QuizCard({ question, questionIndex, total, onAnswer, isAdsInitialized }
           </button>
         ))}
       </div>
-      <ListBannerAd adGroupId="ait.v2.live.7e273542668b401f" isAdsInitialized={isAdsInitialized} />
     </div>
   );
 }
@@ -106,7 +104,7 @@ function getRandomMemories(count = 4) {
   return shuffled.slice(0, count);
 }
 
-function ResultCard({ result, onRetry, isAdsInitialized }) {
+function ResultCard({ result, onRetry }) {
   const [copied, setCopied] = useState(false);
   const [randomMemories] = useState(() => getRandomMemories(4));
 
@@ -184,7 +182,6 @@ function ResultCard({ result, onRetry, isAdsInitialized }) {
         </button>
       </div>
 
-      <ListBannerAd adGroupId="ait.v2.live.7e273542668b401f" isAdsInitialized={isAdsInitialized} />
     </div>
   );
 }
@@ -235,7 +232,7 @@ export default function App() {
   return (
     <div className="app">
       <div className="container">
-        {step === "intro" && <Intro onStart={handleStart} isAdsInitialized={isAdsInitialized} />}
+        {step === "intro" && <Intro onStart={handleStart} />}
         {step === "quiz" && (
           <QuizCard
             key={currentQ}
@@ -243,12 +240,12 @@ export default function App() {
             questionIndex={currentQ}
             total={questions.length}
             onAnswer={handleAnswer}
-            isAdsInitialized={isAdsInitialized}
           />
         )}
         {step === "result" && result && (
-          <ResultCard result={result} onRetry={handleRetry} isAdsInitialized={isAdsInitialized} />
+          <ResultCard result={result} onRetry={handleRetry} />
         )}
+        <ListBannerAd adGroupId="ait.v2.live.7e273542668b401f" isAdsInitialized={isAdsInitialized} />
       </div>
     </div>
   );
