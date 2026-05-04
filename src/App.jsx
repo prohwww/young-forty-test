@@ -80,7 +80,14 @@ function Intro({ onStart }) {
   );
 }
 
-function QuizCard({ question, questionIndex, total, onAnswer, selectedOption }) {
+function QuizCard({ question, questionIndex, total, onAnswer }) {
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  function handleOptionClick(option, idx) {
+    setSelectedOption(idx);
+    onAnswer({ dim: option.dim, val: option.val }, idx);
+  }
+
   return (
     <div className="card quiz-card">
       <ProgressDots current={questionIndex} total={total} />
@@ -91,7 +98,7 @@ function QuizCard({ question, questionIndex, total, onAnswer, selectedOption }) 
           <button
             key={idx}
             className={`option-btn ${selectedOption === idx ? "selected" : ""}`}
-            onClick={() => onAnswer({ dim: option.dim, val: option.val }, idx)}
+            onClick={() => handleOptionClick(option, idx)}
           >
             <span className="option-label">{["A", "B", "C", "D"][idx]}</span>
             {option.text}
@@ -194,18 +201,15 @@ export default function App() {
   const [step, setStep] = useState("intro");
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState([]);
-  const [selectedOption, setSelectedOption] = useState(null);
   const [result, setResult] = useState(null);
 
   function handleStart() {
     setStep("quiz");
     setCurrentQ(0);
     setAnswers([]);
-    setSelectedOption(null);
   }
 
-  function handleAnswer({ dim, val }, optionIdx) {
-    setSelectedOption(optionIdx);
+  function handleAnswer({ dim, val }) {
     setTimeout(() => {
       const newAnswers = [...answers, { dim, val }];
       if (currentQ + 1 >= questions.length) {
@@ -214,7 +218,6 @@ export default function App() {
       } else {
         setAnswers(newAnswers);
         setCurrentQ(currentQ + 1);
-        setSelectedOption(null);
       }
     }, 350);
   }
@@ -223,7 +226,6 @@ export default function App() {
     setStep("intro");
     setCurrentQ(0);
     setAnswers([]);
-    setSelectedOption(null);
     setResult(null);
   }
 
@@ -233,11 +235,11 @@ export default function App() {
         {step === "intro" && <Intro onStart={handleStart} />}
         {step === "quiz" && (
           <QuizCard
+            key={currentQ}
             question={questions[currentQ]}
             questionIndex={currentQ}
             total={questions.length}
             onAnswer={handleAnswer}
-            selectedOption={selectedOption}
           />
         )}
         {step === "result" && result && (

@@ -14,7 +14,7 @@ export default defineConfig({
   outdir: 'dist',
   brand: {
     displayName: '나는 어떤 영포티?',
-    icon: 'https://static.toss.im/appsintoss/73/10550764-5ac1-44e2-9ff3-ad78d8d2e71a.png', // 아이콘 URL로 변경하세요
+    icon: 'https://raw.githubusercontent.com/prohwww/young-forty-test/master/public/icon.png',
     primaryColor: '#7C3AED',
     bridgeColorMode: 'inverted',
   },
