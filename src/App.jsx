@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { TossAds } from "@apps-in-toss/web-framework";
+import { TossAds, getTossShareLink, share } from "@apps-in-toss/web-framework";
 import { questions, types, memories } from "./data/questions";
 import "./App.css";
 
@@ -111,15 +111,21 @@ function ResultCard({ result, onRetry }) {
   const [copied, setCopied] = useState(false);
   const [randomMemories] = useState(() => getRandomMemories(4));
 
-  function handleShare() {
+  async function handleShare() {
     const text = `나는 ${result.emoji} ${result.name} 유형! (영포티 지수 ${result.youngFortyScore}%)\n"${result.subtitle}"\n\n나는 어떤 영포티일까? 테스트해보세요 🔥`;
-    if (navigator.share) {
-      navigator.share({ text });
-    } else {
-      navigator.clipboard.writeText(text).then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      });
+    const ogImageUrl = `${window.location.origin}/og.png`;
+    try {
+      const tossLink = await getTossShareLink("intoss://young40-test", ogImageUrl);
+      await share({ message: `${text}\n\n${tossLink}` });
+    } catch {
+      if (navigator.share) {
+        navigator.share({ text });
+      } else {
+        navigator.clipboard.writeText(text).then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        });
+      }
     }
   }
 
