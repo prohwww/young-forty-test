@@ -54,6 +54,10 @@ function Intro({ onStart }) {
         <br />
         나의 영포티 유형을 알아보자.
       </p>
+      <p className="intro-count">10문항 · 1분</p>
+      <button className="btn-primary" onClick={onStart}>
+        내 유형 알아보기 →
+      </button>
       <div className="type-preview">
         {Object.values(types).map((t) => (
           <div key={t.name} className="type-chip" style={{ background: t.gradient }}>
@@ -61,10 +65,6 @@ function Intro({ onStart }) {
           </div>
         ))}
       </div>
-      <p className="intro-count">10문항 · 1분</p>
-      <button className="btn-primary" onClick={onStart}>
-        내 유형 알아보기 →
-      </button>
     </div>
   );
 }
