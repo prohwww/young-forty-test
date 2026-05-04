@@ -109,7 +109,7 @@ function ResultCard({ result, onRetry, isAdsInitialized }) {
 
   async function handleShare() {
     const text = `나는 ${result.emoji} ${result.name} 유형! (영포티 지수 ${result.youngFortyScore}%)\n"${result.subtitle}"\n\n나는 어떤 영포티일까? 테스트해보세요 🔥`;
-    const ogImageUrl = `${window.location.origin}/og.png`;
+    const ogImageUrl = "https://raw.githubusercontent.com/prohwww/young-forty-test/master/public/og.png";
     try {
       const tossLink = await getTossShareLink("intoss://young40-test", ogImageUrl);
       await share({ message: `${text}\n\n${tossLink}` });
