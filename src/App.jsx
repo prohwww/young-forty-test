@@ -45,7 +45,7 @@ function ProgressDots({ current, total }) {
   );
 }
 
-function Intro({ onStart }) {
+function Intro({ onStart, isAdsInitialized }) {
   return (
     <div className="card intro-card">
       <img src="/logo.png" alt="영포티 테스트" className="intro-logo" />
@@ -65,11 +65,12 @@ function Intro({ onStart }) {
       <button className="btn-primary" onClick={onStart}>
         내 유형 알아보기 →
       </button>
+      <ListBannerAd adGroupId="ait.v2.live.7e273542668b401f" isAdsInitialized={isAdsInitialized} />
     </div>
   );
 }
 
-function QuizCard({ question, questionIndex, total, onAnswer }) {
+function QuizCard({ question, questionIndex, total, onAnswer, isAdsInitialized }) {
   const [selectedOption, setSelectedOption] = useState(null);
 
   function handleOptionClick(option, idx) {
@@ -94,6 +95,7 @@ function QuizCard({ question, questionIndex, total, onAnswer }) {
           </button>
         ))}
       </div>
+      <ListBannerAd adGroupId="ait.v2.live.7e273542668b401f" isAdsInitialized={isAdsInitialized} />
     </div>
   );
 }
@@ -232,7 +234,7 @@ export default function App() {
   return (
     <div className="app">
       <div className="container">
-        {step === "intro" && <Intro onStart={handleStart} />}
+        {step === "intro" && <Intro onStart={handleStart} isAdsInitialized={isAdsInitialized} />}
         {step === "quiz" && (
           <QuizCard
             key={currentQ}
@@ -240,6 +242,7 @@ export default function App() {
             questionIndex={currentQ}
             total={questions.length}
             onAnswer={handleAnswer}
+            isAdsInitialized={isAdsInitialized}
           />
         )}
         {step === "result" && result && (
