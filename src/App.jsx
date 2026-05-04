@@ -1,6 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { TossAds } from "@apps-in-toss/web-framework";
 import { questions, types, memories } from "./data/questions";
 import "./App.css";
+
+function ListBannerAd({ adGroupId }) {
+  const containerRef = useRef(null);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    if (!TossAds.initialize.isSupported()) return;
+    TossAds.initialize({
+      callbacks: {
+        onInitialized: () => setIsInitialized(true),
+        onInitializationFailed: (error) => console.error("Toss Ads 초기화 실패:", error),
+      },
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!isInitialized || !containerRef.current) return;
+    const attached = TossAds.attachBanner(adGroupId, containerRef.current, {
+      theme: "auto",
+      tone: "blackAndWhite",
+      variant: "expanded",
+    });
+    return () => attached?.destroy();
+  }, [isInitialized, adGroupId]);
+
+  return <div ref={containerRef} style={{ width: "100%", height: "96px" }} />;
+}
 
 function getResult(answers) {
   const scores = { A: 0, B: 0, C: 0, D: 0 };
@@ -150,6 +178,8 @@ function ResultCard({ result, onRetry }) {
           다시 테스트하기
         </button>
       </div>
+
+      <ListBannerAd adGroupId="ait.v2.live.7e273542668b401f" />
     </div>
   );
 }
