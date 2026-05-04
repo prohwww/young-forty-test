@@ -73,7 +73,8 @@ function Intro({ onStart, isAdsInitialized }) {
 function QuizCard({ question, questionIndex, total, onAnswer, isAdsInitialized }) {
   const [selectedOption, setSelectedOption] = useState(null);
 
-  function handleOptionClick(option, idx) {
+  function handleOptionClick(option, idx, event) {
+    event.currentTarget.blur();
     setSelectedOption(idx);
     onAnswer({ dim: option.dim, val: option.val }, idx);
   }
@@ -88,7 +89,7 @@ function QuizCard({ question, questionIndex, total, onAnswer, isAdsInitialized }
           <button
             key={idx}
             className={`option-btn ${selectedOption === idx ? "selected" : ""}`}
-            onClick={() => handleOptionClick(option, idx)}
+            onClick={(e) => handleOptionClick(option, idx, e)}
           >
             <span className="option-label">{["A", "B", "C", "D"][idx]}</span>
             {option.text}

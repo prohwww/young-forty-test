@@ -13,7 +13,7 @@ export default defineConfig({
   permissions: [],
   outdir: 'dist',
   brand: {
-    displayName: '나는 어떤 영포티?',
+    displayName: '영포티 테스트',
     icon: 'https://raw.githubusercontent.com/prohwww/young-forty-test/master/public/icon.png',
     primaryColor: '#7C3AED',
     bridgeColorMode: 'inverted',
