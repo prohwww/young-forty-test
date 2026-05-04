@@ -3,29 +3,18 @@ import { TossAds, getTossShareLink, share } from "@apps-in-toss/web-framework";
 import { questions, types, memories } from "./data/questions";
 import "./App.css";
 
-function ListBannerAd({ adGroupId }) {
+function ListBannerAd({ adGroupId, isAdsInitialized }) {
   const containerRef = useRef(null);
-  const [isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
-    if (!TossAds.initialize.isSupported()) return;
-    TossAds.initialize({
-      callbacks: {
-        onInitialized: () => setIsInitialized(true),
-        onInitializationFailed: (error) => console.error("Toss Ads 초기화 실패:", error),
-      },
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!isInitialized || !containerRef.current) return;
+    if (!isAdsInitialized || !containerRef.current) return;
     const attached = TossAds.attachBanner(adGroupId, containerRef.current, {
       theme: "auto",
       tone: "blackAndWhite",
       variant: "expanded",
     });
     return () => attached?.destroy();
-  }, [isInitialized, adGroupId]);
+  }, [isAdsInitialized, adGroupId]);
 
   return <div ref={containerRef} style={{ width: "100%", height: "96px" }} />;
 }
@@ -114,7 +103,7 @@ function getRandomMemories(count = 4) {
   return shuffled.slice(0, count);
 }
 
-function ResultCard({ result, onRetry }) {
+function ResultCard({ result, onRetry, isAdsInitialized }) {
   const [copied, setCopied] = useState(false);
   const [randomMemories] = useState(() => getRandomMemories(4));
 
@@ -192,7 +181,7 @@ function ResultCard({ result, onRetry }) {
         </button>
       </div>
 
-      <ListBannerAd adGroupId="ait.v2.live.7e273542668b401f" />
+      <ListBannerAd adGroupId="ait.v2.live.7e273542668b401f" isAdsInitialized={isAdsInitialized} />
     </div>
   );
 }
@@ -202,6 +191,17 @@ export default function App() {
   const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [result, setResult] = useState(null);
+  const [isAdsInitialized, setIsAdsInitialized] = useState(false);
+
+  useEffect(() => {
+    if (!TossAds.initialize.isSupported()) return;
+    TossAds.initialize({
+      callbacks: {
+        onInitialized: () => setIsAdsInitialized(true),
+        onInitializationFailed: (error) => console.error("Toss Ads 초기화 실패:", error),
+      },
+    });
+  }, []);
 
   function handleStart() {
     setStep("quiz");
@@ -243,7 +243,7 @@ export default function App() {
           />
         )}
         {step === "result" && result && (
-          <ResultCard result={result} onRetry={handleRetry} />
+          <ResultCard result={result} onRetry={handleRetry} isAdsInitialized={isAdsInitialized} />
         )}
       </div>
     </div>
